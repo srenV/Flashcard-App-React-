@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import "./App.css";
 import { Header } from "./layout/Header";
 import { LeftSection } from "./sections/LeftSection";
 import { RightSection } from "./sections/RightSection";
 import { FlashcardsProvider } from "./context/FlashcardsContext";
 import { AllCards } from "./sections/AllCards";
+import { Footer } from "./layout/Footer";
 
 
 // Root application component. Wraps the app in `FlashcardsProvider` so child
@@ -12,15 +13,12 @@ import { AllCards } from "./sections/AllCards";
 function App() {
   // `learnMode` toggles between study view and the all-cards listing
   const [learnMode, setLearnMode] = useState(true);
-  const [mode, setMode] = useState();
 
 
   return (
     <FlashcardsProvider>
-      <div className="bg-[#f7f3f0] min-w-screen mx-auto flex flex-col gap-5 pt-5 p-5 2xl:px-50">
-          <div className="flex flex-col gap-5">
-            <Header learnMode={learnMode} setLearnMode={setLearnMode} />
-
+      <div className="bg-[#f7f3f0] min-w-screen min-h-screen mx-auto justify-between flex flex-col gap-5 pt-5 p-5 ">
+        <Header learnMode={learnMode} setLearnMode={setLearnMode} />
             {/* Main area: switch between learning layout and all-cards view */}
             {learnMode ? (
               <main className="w-full flex flex-col gap-10 lg:flex-row">
@@ -32,34 +30,7 @@ function App() {
                 <AllCards />
               </main>
             )}
-          </div>
-
-        <footer className="flex justify-between p-2 px-5 border-2 border-r-4 text-xs md:text-lg border-b-4 rounded-full font-semibold">
-          <div className="flex md:gap-5 md:flex-row flex-col">
-            <a href="https://github.com/srenV">GitHub</a>
-            <a href="https://www.linkedin.com/in/soren-timo-voigt/">LinkedIn</a>
-          </div>
-          <div>
-            <span>
-              <span className="invisible md:visible">Challenge from{" "}</span>
-              <a
-                href="https://www.frontendmentor.io/challenges/flashcard-app"
-                className="text-blue-400"
-              >
-                {" "}
-                FrontendMentor
-              </a>
-            </span>
-          </div>
-          <div className="flex md:gap-5 md:flex-row flex-col">
-            <a href="https://srenv.vercel.app/impressum" target="_blank">
-              Impressum
-            </a>
-            <a className="text-nowrap" href="https://srenv.vercel.app/legal" target="_blank">
-              Privacy Policy
-            </a>
-          </div>
-        </footer>
+          <Footer/>
       </div>
 
       {/* Simple footer links */}

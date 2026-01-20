@@ -39,7 +39,7 @@ export const RightSection = () => {
       <StatisticCard
         heading={"In Progress"}
         // in progress: knownCount less than 5
-        value={flashcards.filter((filter) => filter.knownCount < 5).length}
+        value={flashcards.filter((filter) => filter.knownCount > 0).length}
         color={"bg-[#f173a3]"}
         icon={"in-progress.svg"}
       />
