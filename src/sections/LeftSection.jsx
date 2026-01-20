@@ -37,14 +37,14 @@ export const LeftSection = () => {
   const card = filtered?.[cardIndex];
 
   return (
-    <div className="w-full bg-[#ffff] rounded-3xl mx-auto border-2 border-r-4 border-b-4">
+    <div className="w-full bg-[#ffff] rounded-3xl text-sm md:text-md mx-auto border-2 border-r-4 border-b-4">
       <div className="flex p-5 justify-between items-center">
         <div className="flex gap-5">
           {/* Category selector - resets index to 0 when changed */}
           <select
             name="select"
             id="select"
-            className="bg-white border-2 rounded-full p-2 font-semibold"
+            className="bg-white border-2 rounded-2xl text-sm md:text-md md:w-fit w-30 p-2 font-semibold"
             value={cardCategory}
             onChange={(e) => {
               setCardCategory(e.target.value);
@@ -82,14 +82,14 @@ export const LeftSection = () => {
 
         {/* Shuffle picks a random index within the filtered list */}
         <button
-          className="flex items-center gap-2 p-2 border-2 border-r-4 border-b-4 rounded-full cursor-pointer"
+          className="flex items-center gap-2 p-2 border-2 border-r-4 border-b-4 rounded-2xl cursor-pointer"
           type="button"
           onClick={() =>
             setCardIndex(Math.floor(Math.random() * (filtered?.length ?? 1)))
           }
         >
           <img src="/icon-shuffle.svg" alt="shuffle icon" />
-          <span className="font-semibold">Shuffle</span>
+          <span className="font-semibold sm:invisible md:visible">Shuffle</span>
         </button>
       </div>
 
@@ -142,7 +142,7 @@ export const LeftSection = () => {
           {/* Actions: mark as known or reset progress */}
           <div className="flex justify-center gap-5">
             <button
-              className={`p-3 border rounded-full flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3 text-xl bg-[#f6cb44] `}
+              className={`p-3 border rounded-2xl text-sm md:text-xl text-nowrap flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3  bg-[#f6cb44] `}
               onClick={() => {
                 // increment known count for this card via context helper
                 if (card?.id) updateKnownCount(card.id);
@@ -152,7 +152,7 @@ export const LeftSection = () => {
             </button>
 
             <button
-              className="p-3 border rounded-full flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3 text-xl bg-[#ffff]"
+              className="p-3 border rounded-2xl text-sm md:text-xl flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3 bg-[#ffff]"
               onClick={() => {
                 // reset progress for this card via context helper
                 if (card?.id) resetKnownCount(card.id);
