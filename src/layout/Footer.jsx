@@ -9,7 +9,7 @@ export const Footer = () => {
           </div>
           <div>
             <span>
-              <span className="invisible md:visible">Challenge from{" "}</span>
+              <span className="hidden md:block">Challenge from{" "}</span>
               <a
                 href="https://www.frontendmentor.io/challenges/flashcard-app"
                 className="text-blue-400"

@@ -37,7 +37,7 @@ export const LeftSection = () => {
   const card = filtered?.[cardIndex];
 
   return (
-    <div className="w-full bg-[#ffff] rounded-3xl text-sm md:text-md mx-auto border-2 border-r-4 border-b-4">
+    <div className="w-full bg-[#ffff] rounded-3xl text-xs md:text-md mx-auto border-2 border-r-4 border-b-4">
       <div className="flex p-5 justify-between items-center">
         <div className="flex gap-5">
           {/* Category selector - resets index to 0 when changed */}
@@ -89,7 +89,7 @@ export const LeftSection = () => {
           }
         >
           <img src="/icon-shuffle.svg" alt="shuffle icon" />
-          <span className="font-semibold sm:invisible md:visible">Shuffle</span>
+          <span className="font-semibold hidden md:block">Shuffle</span>
         </button>
       </div>
 
@@ -125,13 +125,13 @@ export const LeftSection = () => {
               <p className="text-xl font-semibold">Click to reveal answer</p>
             ) : null}
 
-            <div className="absolute top-10 right-20 rotate-45">
+            <div className="absolute top-15 md:top-10 right-15 md:right-20 rotate-45">
               <img
                 src="/pattern-star-blue.svg"
                 alt="decorative star pattern"
               />
             </div>
-            <div className="absolute bottom-15 left-30 rotate-45">
+            <div className="absolute bottom-15 left-20 md:left-30 rotate-45">
               <img
                 src="/pattern-star-yellow.svg"
                 alt="decorative star pattern"
