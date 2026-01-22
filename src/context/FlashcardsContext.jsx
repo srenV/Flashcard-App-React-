@@ -9,24 +9,30 @@ import React, { createContext, useContext, useEffect, useState } from "react";
   - `updateKnownCount(id)` / `resetKnownCount(id)` : helpers to mutate a
      single card's progress while keeping state updates immutable.
 
+
   Notes:
   - Consumers should prefer the provided helper functions instead of
     manipulating `flashcards` directly to ensure localStorage stays in sync.
 */
+
 const FlashcardsContext = createContext({
   flashcards: [],
   setFlashcards: () => {},
   updateFlashcards: () => {},
 });
 
+
+
 export const FlashcardsProvider = ({ children }) => {
+
+  const [currentDeck, setCurrentDeck] = useState("Default");
   // Lazy initialize state from localStorage.
   // Implementation detail: the function form of `useState` runs once during
   // initial render to synchronously read persisted JSON. This avoids an
   // extra render that would occur if we read storage inside `useEffect`.
   const [flashcards, setFlashcards] = useState(() => {
     try {
-      const saved = localStorage.getItem("flashcards_data");
+      const saved = localStorage.getItem("Default");
       return saved ? JSON.parse(saved) : [];
     } catch {
       // Defensive: if localStorage contains invalid JSON, fall back to []
@@ -46,11 +52,11 @@ export const FlashcardsProvider = ({ children }) => {
       fetch("/data.json")
         .then((res) => res.json())
         .then((data) => {
-          const saved = localStorage.getItem("flashcards_data");
+          const saved = localStorage.getItem("Default");
           const initialData = data.flashcards || [];
           if (!saved) {
             localStorage.setItem(
-              "flashcards_data",
+              "Default",
               JSON.stringify(initialData),
             );
             setFlashcards(initialData);
@@ -61,6 +67,40 @@ export const FlashcardsProvider = ({ children }) => {
         });
     }
   }, [flashcards.length]);
+
+  const createDeck = (name) => {
+    try {
+      localStorage.setItem(name, JSON.stringify([]));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const createCard = ({
+    question,
+    answer,
+    category,
+    knownCount = 0,
+    id,
+  } = {}) => {
+    setFlashcards((prev) => {
+      const newId = id ?? (prev.length + 1 || 1);
+      const item = {
+        id: newId,
+        question,
+        answer,
+        category,
+        knownCount,
+      };
+      const updated = [...prev, item];
+      try {
+        localStorage.setItem(currentDeck, JSON.stringify(updated));
+      } catch (e) {
+        // ignore storage errors
+      }
+      return updated;
+    });
+  };
 
   /**
    * updateKnownCount(id)
@@ -78,7 +118,7 @@ export const FlashcardsProvider = ({ children }) => {
           : flashcard,
       );
       try {
-        localStorage.setItem("flashcards_data", JSON.stringify(updated));
+        localStorage.setItem(currentDeck, JSON.stringify(updated));
       } catch (e) {
         // Persist failure is non-fatal; we still return updated state.
       }
@@ -97,7 +137,7 @@ export const FlashcardsProvider = ({ children }) => {
         flashcard.id === id ? { ...flashcard, knownCount: 0 } : flashcard,
       );
       try {
-        localStorage.setItem("flashcards_data", JSON.stringify(updated));
+        localStorage.setItem(currentDeck, JSON.stringify(updated));
       } catch (e) {
         // ignore storage errors
       }
@@ -107,10 +147,11 @@ export const FlashcardsProvider = ({ children }) => {
 
   const resetAllKnownCount = () => {
     setFlashcards((prevFlashcards) => {
-      const updated = prevFlashcards.map((flashcard) =>
-        flashcard  = { ...flashcard, knownCount: 0 } );
+      const updated = prevFlashcards.map(
+        (flashcard) => (flashcard = { ...flashcard, knownCount: 0 }),
+      );
       try {
-        localStorage.setItem("flashcards_data", JSON.stringify(updated));
+        localStorage.setItem(currentDeck, JSON.stringify(updated));
       } catch (e) {
         // ignore storage errors
       }
@@ -119,25 +160,33 @@ export const FlashcardsProvider = ({ children }) => {
   };
 
   const categoryColor = [
-    {category: "JavaScript", color: "yellow"},
-    {category: "HTML", color: "grey"},
-    {category: "CSS", color: "lightblue"},
-    {category: "Web Development", color: "aquamarine"},
-    {category: "Mathematics", color: "aliceblue"},
-    {category: "Literature", color: "bisque"},
-    {category: "Science", color: "ghostwhite"},
-    {category: "History", color: "lightcoral"},
-    {category: "Geography", color: "olivedrab"},
-  ]
-
-
+    { category: "JavaScript", color: "yellow" },
+    { category: "HTML", color: "grey" },
+    { category: "CSS", color: "lightblue" },
+    { category: "Web Development", color: "aquamarine" },
+    { category: "Mathematics", color: "aliceblue" },
+    { category: "Literature", color: "bisque" },
+    { category: "Science", color: "ghostwhite" },
+    { category: "History", color: "lightcoral" },
+    { category: "Geography", color: "olivedrab" },
+  ];
 
   // Context provider: expose current state and mutation helpers to consumers.
   // Consumers should treat `flashcards` as read-only and use helpers to mutate
   // individual cards which guarantees localStorage synchronization.
   return (
     <FlashcardsContext.Provider
-      value={{ flashcards, setFlashcards, updateKnownCount, resetKnownCount, resetAllKnownCount, categoryColor }}
+      value={{
+        flashcards,
+        setFlashcards,
+        updateKnownCount,
+        resetKnownCount,
+        resetAllKnownCount,
+        categoryColor,
+        createCard,
+        createDeck,
+        currentDeck,
+      }}
     >
       {children}
     </FlashcardsContext.Provider>

@@ -7,7 +7,7 @@ export const RightSection = () => {
   // read-only access to flashcards from context
   const { flashcards, resetAllKnownCount } = useFlashcards();
   return (
-    <div className="bg-[#ffff] rounded-3xl w-full lg:w-[40%] p-8 flex flex-col items-center border-2 border-r-4 gap-4 border-b-4">
+    <div className="bg-[#ffff] rounded-3xl w-full lg:w-[40%] p-2 md:p-8 flex flex-col items-center border-2 border-r-4 gap-4 border-b-4">
       <div className="flex gap-5 md:gap-10 border-2 border-r-4 border-b-4 rounded-full p-2 items-center">
         <span className="text-2xl md:text-3xl text-nowrap font-semibold">
           Study Statistics

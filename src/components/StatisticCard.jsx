@@ -18,7 +18,7 @@ export const StatisticCard = (props) => {
       <div
         className={`${props.color} w-[30%] flex items-center justify-center rounded-r-xl`}
       >
-        <img src={`/icon-stats-${props.icon}`} alt="" />
+        <img src={`/icon-stats-${props.icon}`} alt={props.icon} />
       </div>
     </div>
   );

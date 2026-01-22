@@ -3,8 +3,8 @@ import { useFlashcards } from "../context/FlashcardsContext";
 
 // AllCards lists all flashcards (optionally filtered by category)
 export const AllCards = () => {
-  const { flashcards, categoryColor } = useFlashcards();
-  const [cardCategory, setCardCategory] = useState("All Categorys");
+  const { flashcards, categoryColor, currentDeck } = useFlashcards();
+  const [cardCategory, setCardCategory ] = useState("All Categorys");
 
   // Filter cards by selected category. Memoize for performance.
   const filtered = useMemo(() => {
@@ -15,7 +15,7 @@ export const AllCards = () => {
 
   return (
     <div className=" min-w-full min-h-full flex flex-col gap-5 ">
-      <div>
+      <div className="flex gap-5 justify-between items-center">
         {/* Category selector */}
         <select
           name="selectAllCard"
@@ -37,7 +37,9 @@ export const AllCards = () => {
           <option value="History">History</option>
           <option value="Geography">Geography</option>
         </select>
+        <span className="">{currentDeck}</span>
       </div>
+      
 
       {/* Grid of cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">

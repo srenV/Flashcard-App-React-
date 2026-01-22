@@ -104,7 +104,7 @@ export const LeftSection = () => {
                 (filter) => filter.category === card?.category
               )?.color,
             }}
-            className={`bg-[url('/public/pattern-flashcard-bg.svg')] w-full h-150 relative rounded-3xl border-2 border-b-6 border-r-6 cursor-pointer flex flex-col items-center gap-5 justify-center p-6`}
+            className={`bg-[url('/public/pattern-flashcard-bg.svg')] w-full h-100 relative rounded-3xl border-2 border-b-6 border-r-6 cursor-pointer flex flex-col items-center gap-5 justify-center p-6`}
             onClick={() => card && setClick(!click)}
           >
             {/* Category badge */}
@@ -142,7 +142,7 @@ export const LeftSection = () => {
           {/* Actions: mark as known or reset progress */}
           <div className="flex justify-center gap-5">
             <button
-              className={`p-3 border rounded-2xl text-sm md:text-xl text-nowrap flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3  bg-[#f6cb44] `}
+              className={`p-3 border rounded-2xl text-sm md:text-xl text-nowrap flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-4  bg-[#f6cb44] `}
               onClick={() => {
                 // increment known count for this card via context helper
                 if (card?.id) updateKnownCount(card.id);
