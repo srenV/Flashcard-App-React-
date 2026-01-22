@@ -38,7 +38,7 @@ export const CardModal = ({ isOpen, onClose }) => {
         
         <button className="place-self-end absolute top-4 right-4" onClick={onClose}><CircleX className="scale-150" /></button>
         <span>Create a new Card.</span>
-        <div className=" flex flex-col gap-5">
+        <form className=" flex flex-col gap-5">
           <select
             name="selectAllCard"
             id="selectAllCard"
@@ -67,6 +67,7 @@ export const CardModal = ({ isOpen, onClose }) => {
               value={question}
               name="front"
               id="front"
+              required
               onChange={(e) => setQuestion(e.target.value)}
             />
           </div>
@@ -78,6 +79,7 @@ export const CardModal = ({ isOpen, onClose }) => {
               type="text"
               name="back"
               id="back"
+              required
               onChange={(e) => setAnswer(e.target.value)}
             />
           </div>
@@ -111,7 +113,7 @@ export const CardModal = ({ isOpen, onClose }) => {
               Reset
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>,
     document.body,

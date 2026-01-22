@@ -17,7 +17,7 @@ function App() {
 
   return (
     <FlashcardsProvider>
-      <div className="bg-[#f7f3f0] mx-auto justify-between flex flex-col gap-5 pt-5 p-5 ">
+      <div className="bg-[#f7f3f0] mx-auto min-h-svh justify-between flex flex-col gap-5 pt-5 p-1 md:p-5 ">
         <Header learnMode={learnMode} setLearnMode={setLearnMode} />
             {/* Main area: switch between learning layout and all-cards view */}
             {learnMode ? (

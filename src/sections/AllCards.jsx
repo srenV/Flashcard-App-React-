@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useFlashcards } from "../context/FlashcardsContext";
+import { Trash2Icon } from "lucide-react";
+
 
 // AllCards lists all flashcards (optionally filtered by category)
 export const AllCards = () => {
-  const { flashcards, categoryColor, currentDeck } = useFlashcards();
+  const { flashcards, categoryColor, currentDeck, deleteCard } = useFlashcards();
   const [cardCategory, setCardCategory ] = useState("All Categorys");
 
   // Filter cards by selected category. Memoize for performance.
@@ -37,7 +39,7 @@ export const AllCards = () => {
           <option value="History">History</option>
           <option value="Geography">Geography</option>
         </select>
-        <span className="">{currentDeck}</span>
+        <span className="mr-5 text-xl font-bold">{currentDeck}{" "}Deck</span>
       </div>
       
 
@@ -50,20 +52,22 @@ export const AllCards = () => {
           >
             {/* header shows id and category with a random background */}
             <div
-              className={`flex justify-between items-start p-4  rounded-t-xl`}
+              className={`flex justify-between relative items-start p-4  rounded-t-xl`}
               style={{
               backgroundColor: categoryColor.find(
                 (filter) => filter.category === card?.category
               )?.color,
             }}
             >
-              <span>{card.id}</span>
+              
+              <span className="font-bold text-lg">{card.id}</span>
               <span>{card.category}</span>
             </div>
             <hr />
             <div className="flex flex-col place-self-center my-auto  gap-1 p-4">
               <span>{card.question}</span>
               <span>{card.answer}</span>
+              <button aria-label="Delete card" className="absolute flex  bg-red-700 p-2 rounded-tl-2xl rounded-br-xl items-center justify-center bottom-0 right-0" onClick={() => {deleteCard(index)}}><Trash2Icon/></button>
             </div>
           </div>
         ))}

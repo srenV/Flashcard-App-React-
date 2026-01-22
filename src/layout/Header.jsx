@@ -2,7 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { CardModal } from "../components/CardModal";
 import { DeckModal } from "../components/DeckModal";
-import { DatabaseBackup, FilePlus } from "lucide-react";
+import { FilePlus, FolderPlusIcon } from "lucide-react";
+
 
 // Header contains the app logo and the top toggle between Study mode and All Cards
 export const Header = ({ learnMode, setLearnMode }) => {
@@ -32,14 +33,13 @@ export const Header = ({ learnMode, setLearnMode }) => {
       {/* Toggle button flips the `learnMode` boolean in the parent */}
       <div className="flex gap-1 md:gap-5">
         <button
-          className="flex font-semibold items-center text-xl p-2 border-2 border-r-4 border-b-4 rounded-2xl"
+          className="flex font-semibold items-center gap-2 text-xl p-2 border-2 border-r-4 border-b-4 rounded-2xl"
           onClick={() => setIsDeckModalOpen(true)}
         >
-          {" "}
-          <DatabaseBackup />  <span className="hidden md:block">Create Deck</span>
+          <FolderPlusIcon /><span className="hidden md:block">Create Deck</span>
         </button>
         <button
-          className="flex font-semibold items-center text-xl p-2 border-2 border-r-4 border-b-4 rounded-2xl"
+          className="flex font-semibold items-center text-xl gap-2 p-2 border-2 border-r-4 border-b-4 rounded-2xl"
           onClick={() => setIsCardModalOpen(true)}
         >
           <FilePlus />  <span className="hidden md:block">Create Card</span>
@@ -49,7 +49,8 @@ export const Header = ({ learnMode, setLearnMode }) => {
           onClick={() => setLearnMode(!learnMode)}
         >
           <div
-            className={` absolute bg-amber-400 w-1/2 h-9/10 border-2 rounded-full duration-300 z-2 top-0.75 left-0 ${learnMode ? "translate-x-2/100" : "translate-x-98/100"}`}
+            className={` absolute bg-amber-400 w-1/2 h-9/10 border-2 rounded-full duration-300 z-2 top-0.75 left-0 ${learnMode ? "translate-x-5/100" : "translate-x-95/100"}`}
+
           ></div>
           <div className="z-10 w-1/2 font-bold ">Study</div>
           <div className="z-10 w-1/2 font-bold">

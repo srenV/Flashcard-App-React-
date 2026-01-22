@@ -104,7 +104,7 @@ export const LeftSection = () => {
                 (filter) => filter.category === card?.category
               )?.color,
             }}
-            className={`bg-[url('/public/pattern-flashcard-bg.svg')] w-full h-100 relative rounded-3xl border-2 border-b-6 border-r-6 cursor-pointer flex flex-col items-center gap-5 justify-center p-6`}
+            className={`bg-[url('/public/pattern-flashcard-bg.svg')] w-full h-100 xl:h-150 relative rounded-3xl border-2 border-b-6 border-r-6 cursor-pointer flex flex-col items-center gap-5 justify-center p-6`}
             onClick={() => card && setClick(!click)}
           >
             {/* Category badge */}

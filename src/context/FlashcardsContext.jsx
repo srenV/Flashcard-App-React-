@@ -102,6 +102,18 @@ export const FlashcardsProvider = ({ children }) => {
     });
   };
 
+  const deleteCard = (index) => {
+    setFlashcards((prevFlashcards) => {
+      const updated = prevFlashcards.filter((_, idx) => idx !== index);
+      try {
+        localStorage.setItem(currentDeck, JSON.stringify(updated));
+      } catch (e) {
+        // Persist failure is non-fatal; we still return updated state.
+      }
+      return updated;
+    });
+  }
+
   /**
    * updateKnownCount(id)
    * - Functional update to avoid stale state in concurrent renders.
@@ -186,6 +198,7 @@ export const FlashcardsProvider = ({ children }) => {
         createCard,
         createDeck,
         currentDeck,
+        deleteCard
       }}
     >
       {children}
