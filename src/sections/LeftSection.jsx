@@ -5,7 +5,8 @@ import { useFlashcards } from "../context/FlashcardsContext";
 // between cards, and actions to mark/reset progress.
 export const LeftSection = () => {
   // Pull flashcards and action helpers from context
-  const { flashcards, updateKnownCount, resetKnownCount, categoryColor } = useFlashcards();
+  const { flashcards, updateKnownCount, resetKnownCount, categoryColor } =
+    useFlashcards();
 
   // Local UI state:
   // `click` toggles whether the card shows the question (true) or answer (false)
@@ -16,6 +17,8 @@ export const LeftSection = () => {
   const [cardCategory, setCardCategory] = useState("All Categorys");
   // whether to hide mastered cards
   const [mastered, setMastered] = useState(false);
+
+  const [shuffleMode, setShuffleMode] = useState(false);
 
   // Compute the filtered list of cards based on selected category and
   // the `mastered` toggle. useMemo avoids recomputing unless dependencies change.
@@ -82,11 +85,9 @@ export const LeftSection = () => {
 
         {/* Shuffle picks a random index within the filtered list */}
         <button
-          className="flex items-center gap-2 p-2 border-2 border-r-4 border-b-4 rounded-2xl cursor-pointer"
+          className={`flex items-center gap-2 p-2 border-2 border-r-4 border-b-4 rounded-2xl cursor-pointer ${shuffleMode ? "bg-yellow-500" : "bg-transparent"}`}
           type="button"
-          onClick={() =>
-            setCardIndex(Math.floor(Math.random() * (filtered?.length ?? 1)))
-          }
+          onClick={() => setShuffleMode(!shuffleMode)}
         >
           <img src="/icon-shuffle.svg" alt="shuffle icon" />
           <span className="font-semibold hidden md:block">Shuffle</span>
@@ -97,11 +98,21 @@ export const LeftSection = () => {
 
       <div>
         {/* Card in focus: clickable area that toggles question/answer */}
-        <div className="bg-[#ffff] w-full h-150 md:h-full relative p-5 md:p-10 flex flex-col gap-5">
+        <div className="bg-[#ffff] w-full h-120 md:h-full relative p-5 md:p-10 flex flex-col gap-5">
           <div
+            role={card ? "button" : undefined}
+            tabIndex={card ? 0 : -1}
+            aria-pressed={card ? click : undefined}
+            aria-label={
+              card
+                ? click
+                  ? "Show answer"
+                  : "Show question"
+                : "No card available"
+            }
             style={{
               backgroundColor: categoryColor.find(
-                (filter) => filter.category === card?.category
+                (filter) => filter.category === card?.category,
               )?.color,
             }}
             className={`bg-[url('/public/pattern-flashcard-bg.svg')] w-full h-100 xl:h-150 relative rounded-3xl border-2 border-b-6 border-r-6 cursor-pointer flex flex-col items-center gap-5 justify-center p-6`}
@@ -113,7 +124,10 @@ export const LeftSection = () => {
             </span>
 
             {/* Show question or answer based on `click` state; fallback message if no card */}
-            <h1 className="text-4xl font-semibold text-center">
+            <h1
+              aria-live="polite"
+              className="text-lg md:text-4xl  font-semibold text-center"
+            >
               {card
                 ? click
                   ? card.question
@@ -122,19 +136,34 @@ export const LeftSection = () => {
             </h1>
 
             {card ? (
-              <p className="text-xl font-semibold">Click to reveal answer</p>
+              <p className="text-lg font-semibold">
+                {click ? "Click to reveal answer" : ""}
+              </p>
             ) : null}
 
-            <div className="absolute top-15 md:top-10 right-15 md:right-20 rotate-45">
-              <img
-                src="/pattern-star-blue.svg"
-                alt="decorative star pattern"
-              />
+            <div className="absolute top-5 md:top-10 right-10 md:right-20 rotate-45">
+              <img src="/pattern-star-blue.svg" alt="decorative star pattern" />
             </div>
-            <div className="absolute bottom-15 left-20 md:left-30 rotate-45">
+            <div className="absolute bottom-10 left-15 md:left-30 rotate-45">
               <img
                 src="/pattern-star-yellow.svg"
                 alt="decorative star pattern"
+              />
+            </div>
+            <span className="absolute bottom-15 mx-auto self-center font-semibold">
+              {card?.knownCount} / 5
+            </span>
+            <div className="absolute bottom-10 flex w-20/100 md:w-5/100 h-3/100 bg-white rounded-xl border-2 overflow-hidden">
+              <div
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={5}
+                aria-valuenow={card?.knownCount ?? 0}
+                aria-valuetext={`${card?.knownCount ?? 0} of 5`}
+                className="bg-gray-500 h-full transition-all duration-200"
+                style={{
+                  width: `${((card?.knownCount ?? 0) / 5) * 100}%`,
+                }}
               />
             </div>
           </div>
@@ -142,7 +171,9 @@ export const LeftSection = () => {
           {/* Actions: mark as known or reset progress */}
           <div className="flex justify-center gap-5">
             <button
-              className={`p-3 border rounded-2xl text-sm md:text-xl text-nowrap flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-4  bg-[#f6cb44] `}
+              type="button"
+              aria-label="Mark card as known"
+              className={`p-3 border rounded-2xl text-sm md:text-xl text-nowrap flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-4  ${card?.knownCount === 5 ? "bg-yellow-500" : "bg-transparent"} `}
               onClick={() => {
                 // increment known count for this card via context helper
                 if (card?.id) updateKnownCount(card.id);
@@ -152,6 +183,8 @@ export const LeftSection = () => {
             </button>
 
             <button
+              type="button"
+              aria-label="Reset progress for this card"
               className="p-3 border rounded-2xl text-sm md:text-xl flex items-center justify-center gap-3 font-semibold cursor-pointer border-b-4 border-r-3 bg-[#ffff]"
               onClick={() => {
                 // reset progress for this card via context helper
@@ -169,6 +202,8 @@ export const LeftSection = () => {
       {/* Navigation: previous / next and current index display */}
       <nav className="flex justify-between items-center p-5">
         <button
+          type="button"
+          aria-label="Previous card"
           className="flex cursor-pointer border-2 border-r-4 border-b-4 p-3 items-center justify-center rounded-full font-bold gap-2"
           onClick={() => cardIndex > 0 && setCardIndex(cardIndex - 1)}
         >
@@ -181,10 +216,15 @@ export const LeftSection = () => {
         </span>
 
         <button
+          type="button"
+          aria-label="Next card"
           className="flex cursor-pointer border-2 border-r-4 border-b-4 p-3 items-center justify-center rounded-full font-bold gap-2"
           onClick={() => {
-            if (cardIndex < (filtered?.length ?? 0) - 1)
+            if (shuffleMode) {
+              setCardIndex(Math.floor(Math.random() * (filtered?.length ?? 1)));
+            } else if (cardIndex < (filtered?.length ?? 0) - 1) {
               setCardIndex(cardIndex + 1);
+            }
           }}
         >
           Next

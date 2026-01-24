@@ -1,14 +1,21 @@
+/*
+  DeckModal
+  - Modal UI to create new decks (currently minimal/placeholder).
+  - Mirrors `CardModal` in structure: portal rendering, Escape-to-close,
+    and click-to-close outer overlay.
+  - NOTE: The Create button is disabled and the implementation is incomplete.
+*/
 import { CircleX } from "lucide-react";
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import { useFlashcards } from "../context/FlashcardsContext";
 
+// ---------------------------------------------------------------- todo -----------------------------------------------------------
 
 export const DeckModal = ({ isOpen, onClose }) => {
-
   const { createDeck } = useFlashcards();
-  const [deckName, setDeckName] = useState("")
+  const [deckName, setDeckName] = useState("");
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -32,7 +39,12 @@ export const DeckModal = ({ isOpen, onClose }) => {
         className="bg-white p-10 border-2 border-r-3 border-b-4 flex flex-col rounded-3xl relative z-40 shadow-2xl bg-[url('/public/pattern-flashcard-bg.svg')]"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="place-self-end absolute top-4 right-4" onClick={onClose}><CircleX className="scale-150" /></button>
+        <button
+          className="place-self-end absolute top-4 right-4"
+          onClick={onClose}
+        >
+          <CircleX className="scale-150" />
+        </button>
         <div className=" flex flex-col gap-5 ">
           <div className="flex flex-col">
             <label htmlFor="name">Deckname</label>
@@ -51,9 +63,9 @@ export const DeckModal = ({ isOpen, onClose }) => {
               disabled // <------------------- Entfernen nach korrekter implementierung
               onClick={() => {
                 createDeck({
-                  deckName
+                  deckName,
                 });
-                onClose
+                onClose;
                 setDeckName("");
               }}
             >

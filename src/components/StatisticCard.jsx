@@ -11,7 +11,12 @@ export const StatisticCard = (props) => {
     <div className="flex w-full h-full border-2 border-r-4 border-b-4 rounded-2xl">
       <div className="w-[70%] flex flex-col items-start justify-center border-r p-5 gap-3">
         <span className="text-xl font-semibold">{props.heading}</span>
-        <span className="text-5xl font-bold">{props.value}</span>
+        <span
+          className="text-5xl font-bold"
+          aria-label={`${props.heading}: ${props.value}`}
+        >
+          {props.value}
+        </span>
       </div>
 
       {/* Icon / color area */}

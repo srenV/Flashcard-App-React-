@@ -84,7 +84,12 @@ export const FlashcardsProvider = ({ children }) => {
     id,
   } = {}) => {
     setFlashcards((prev) => {
-      const newId = id ?? (prev.length + 1 || 1);
+      // Prefer an explicit id when provided. Otherwise generate a stable
+      // unique id by taking the max existing id and adding 1. This prevents
+      // accidental id reuse when cards are deleted (which could otherwise
+      // break operations that rely on id equality).
+      const maxId = prev.length ? Math.max(...prev.map((c) => Number(c.id) || 0)) : 0;
+      const newId = id ?? (maxId + 1 || 1);
       const item = {
         id: newId,
         question,
@@ -102,9 +107,12 @@ export const FlashcardsProvider = ({ children }) => {
     });
   };
 
-  const deleteCard = (index) => {
+  // Delete by unique `id` instead of array index. Consumers should pass
+  // the card's `id` (e.g. `deleteCard(card.id)`) which is stable across
+  // reorders and filters.
+  const deleteCard = (id) => {
     setFlashcards((prevFlashcards) => {
-      const updated = prevFlashcards.filter((_, idx) => idx !== index);
+      const updated = prevFlashcards.filter((flashcard) => flashcard.id !== id);
       try {
         localStorage.setItem(currentDeck, JSON.stringify(updated));
       } catch (e) {
@@ -112,7 +120,7 @@ export const FlashcardsProvider = ({ children }) => {
       }
       return updated;
     });
-  }
+  };
 
   /**
    * updateKnownCount(id)
@@ -170,6 +178,23 @@ export const FlashcardsProvider = ({ children }) => {
       return updated;
     });
   };
+  
+
+  const [toggleToast, setToggleToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    if (!toggleToast) return;
+
+    const timer = setTimeout(() => {
+      setToggleToast(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+      setToggleToast(false);
+    };
+  }, [toggleToast]);
 
   const categoryColor = [
     { category: "JavaScript", color: "yellow" },
@@ -198,7 +223,11 @@ export const FlashcardsProvider = ({ children }) => {
         createCard,
         createDeck,
         currentDeck,
-        deleteCard
+        deleteCard,
+        toggleToast,
+        setToggleToast,
+        toastMessage,
+        setToastMessage
       }}
     >
       {children}
